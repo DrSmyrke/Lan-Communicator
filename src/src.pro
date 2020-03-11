@@ -37,11 +37,14 @@ QMAKE_CXXFLAGS += "-std=c++11"
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    searcher.cpp
+    searcher.cpp \
+    global.cpp
 
 HEADERS += \
         mainwindow.h \
-    searcher.h
+    searcher.h \
+    global.h \
+    version.h
 
 FORMS += \
         mainwindow.ui
@@ -51,3 +54,7 @@ TRANSLATIONS = lang/ru_RU.ts
 
 exists(./gitversion.pri):include(./gitversion.pri)
 exists(./myLibs.pri):include(./myLibs.pri)
+
+DISTFILES += \
+    gitversion.pri \
+    index.rc

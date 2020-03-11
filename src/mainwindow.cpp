@@ -12,6 +12,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	connect( m_pTimer, &QTimer::timeout, this, &MainWindow::slot_timerUpdate );
 
+	setWindowTitle( "Lan Communicator v" + app::conf.version );
+	setWindowIcon( QIcon( "://index.ico" ) );
+	setMinimumSize( 640, 480 );
+
 	m_pTimer->setInterval( 3000 );
 	m_pTimer->start();
 }

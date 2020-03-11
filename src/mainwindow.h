@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTimer>
 #include "searcher.h"
+#include "global.h"
 
 namespace Ui {
 class MainWindow;
