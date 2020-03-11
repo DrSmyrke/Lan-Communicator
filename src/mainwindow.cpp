@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
 	delete ui;
+	app::saveSettings();
 }
 
 void MainWindow::slot_timerUpdate()

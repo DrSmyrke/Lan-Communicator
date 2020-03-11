@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "global.h"
 #include "version.h"
+#include "windows/username.h"
 
 #include <QApplication>
 #include <QLocale>
@@ -22,6 +23,14 @@ int main(int argc, char *argv[])
 
 	app::loadSettings();
 	if( !app::parsArgs(argc, argv) ) return 0;
+
+	if( app::conf.id.isEmpty() ){
+		UserNameWindow* unwin = new UserNameWindow();
+		if( unwin->exec() == QDialog::Accepted ){
+			app::generateID( unwin->getUsername() );
+		}
+		unwin->deleteLater();
+	}
 
 	MainWindow w;
 	w.show();

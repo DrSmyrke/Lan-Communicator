@@ -38,13 +38,17 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     searcher.cpp \
-    global.cpp
+    global.cpp \
+    myfunctions.cpp \
+    windows/username.cpp
 
 HEADERS += \
         mainwindow.h \
     searcher.h \
     global.h \
-    version.h
+    version.h \
+    myfunctions.h \
+    windows/username.h
 
 FORMS += \
         mainwindow.ui
@@ -57,4 +61,5 @@ exists(./myLibs.pri):include(./myLibs.pri)
 
 DISTFILES += \
     gitversion.pri \
-    index.rc
+    index.rc \
+    myLibs.pri

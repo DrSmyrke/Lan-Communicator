@@ -14,6 +14,7 @@ struct Config{
 	QString logFile						= QDir::homePath() + "/LanCommunicator.log";
 #endif
 	QString version;
+	QString id;
 };
 
 namespace app {
@@ -23,6 +24,8 @@ namespace app {
 	void saveSettings();
 	bool parsArgs(int argc, char *argv[]);
 	void setLog(const uint8_t logLevel, const QString &mess);
+
+	void generateID(const QString &login);
 }
 
 #endif // GLOBAL_H
