@@ -20,11 +20,13 @@ UserNameWindow::UserNameWindow(QWidget *parent) : QDialog(parent)
 	centrWidget->setLayout(vBox);
 
 	this->setLayout( vBox );
-	setFixedSize( 320, 140 );
+	setFixedSize( 320, 80 );
 	setWindowTitle( tr("Username") );
 	setModal( true );
 
 	connect( submitB, &QPushButton::clicked, this, &UserNameWindow::accept);
+
+	m_pUsernameBox->setPlaceholderText( tr("Username") );
 }
 
 QString UserNameWindow::getUsername()

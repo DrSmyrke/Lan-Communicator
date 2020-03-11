@@ -1,7 +1,7 @@
 #include "global.h"
+#include "myfunctions.h"
 #include <QSettings>
 #include <QDateTime>
-#include <QProcess>
 
 namespace app {
 	Config conf;
@@ -110,7 +110,13 @@ namespace app {
 
 	void generateID(const QString &login)
 	{
-		qDebug()<<login;
+		QByteArray ba;
+		QDateTime dt = QDateTime::currentDateTime();
+		ba.append( login );
+		ba.append( ">:LanCommutator>:" );
+		ba.append( dt.toString("yyyy.MM.dd [hh:mm:ss:zzz] ") );
+
+		app::conf.id = mf::md5( ba );
 	}
 
 }

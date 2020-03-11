@@ -32,6 +32,10 @@ int main(int argc, char *argv[])
 		unwin->deleteLater();
 	}
 
+	if( app::conf.id.isEmpty() ){
+		return 0;
+	}
+
 	MainWindow w;
 	w.show();
 
