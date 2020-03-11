@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QUdpSocket>
+#include "myproto.h"
+#include "global.h"
 
 class Searcher : public QObject
 {

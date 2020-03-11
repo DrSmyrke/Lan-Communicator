@@ -40,7 +40,8 @@ SOURCES += \
     searcher.cpp \
     global.cpp \
     myfunctions.cpp \
-    windows/username.cpp
+    windows/username.cpp \
+    myproto.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -48,7 +49,8 @@ HEADERS += \
     global.h \
     version.h \
     myfunctions.h \
-    windows/username.h
+    windows/username.h \
+    myproto.h
 
 FORMS += \
         mainwindow.ui

@@ -11,6 +11,7 @@ namespace app {
 		QSettings settings("MySoft","LanCommunicator");
 
 		app::conf.id = settings.value( "MAIN/id", app::conf.id ).toString();
+		app::conf.port = settings.value( "MAIN/port", app::conf.port ).toUInt();
 
 //		settings.beginGroup("SYNC_SAVE_DIRS");
 //		app::conf.sync.saveDirs.clear();
@@ -43,6 +44,7 @@ namespace app {
 		settings.clear();
 
 		settings.setValue( "MAIN/id", app::conf.id );
+		settings.setValue( "MAIN/port", app::conf.port );
 
 //		i = 0;
 //		for(auto elem:app::conf.sync.saveDirs){
@@ -102,10 +104,12 @@ namespace app {
 		}
 
 		if( app::conf.logFile.isEmpty() ) return;
-		FILE* f;
-		f = fopen(app::conf.logFile.toUtf8().data(),"a+");
-		fwrite(str.toUtf8().data(),str.length(),1,f);
-		fclose(f);
+		QFile f;
+		f.setFileName( app::conf.logFile );
+		if( f.open( QIODevice::WriteOnly | QIODevice::Append ) ){
+			f.write( str.toUtf8().data() );
+			f.close();
+		}
 	}
 
 	void generateID(const QString &login)

@@ -15,6 +15,7 @@ struct Config{
 #endif
 	QString version;
 	QString id;
+	uint16_t port						= 7373;
 };
 
 namespace app {
