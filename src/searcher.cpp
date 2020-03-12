@@ -93,6 +93,7 @@ void Searcher::foundID(const QString &id, const QHostAddress &addr, const uint16
 		auto elem = i.next();
 		if( elem.id == id ){
 			elem.timestamp = app::getUnixTime();
+			i.setValue( elem );
 			find = true;
 			break;
 		}

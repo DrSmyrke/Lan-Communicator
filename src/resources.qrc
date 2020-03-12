@@ -3,5 +3,6 @@
         <file>images/lan.png</file>
         <file>images/PC.png</file>
         <file>index.ico</file>
+        <file>images/user.png</file>
     </qresource>
 </RCC>

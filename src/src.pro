@@ -42,7 +42,8 @@ SOURCES += \
     myfunctions.cpp \
     windows/username.cpp \
     myproto.cpp \
-    widgets/tabwidget.cpp
+    widgets/tabwidget.cpp \
+    windows/contacteditor.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -52,11 +53,13 @@ HEADERS += \
     myfunctions.h \
     windows/username.h \
     myproto.h \
-    widgets/tabwidget.h
+    widgets/tabwidget.h \
+    windows/contacteditor.h
 
 FORMS += \
         mainwindow.ui \
-    widgets/tabwidget.ui
+    widgets/tabwidget.ui \
+    windows/contacteditor.ui
 
 TRANSLATIONS = lang/ru_RU.ts
 

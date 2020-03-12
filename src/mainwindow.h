@@ -8,6 +8,7 @@
 #include <QMenu>
 #include <QCloseEvent>
 #include "widgets/tabwidget.h"
+#include "windows/contacteditor.h"
 #include "searcher.h"
 #include "global.h"
 
@@ -24,9 +25,10 @@ public:
 	~MainWindow();
 private slots:
 	void slot_timerUpdate();
-	void slot_searcherUpdateList();
+	void slot_updateList();
 	void slot_trayIconActivated(QSystemTrayIcon::ActivationReason reason);
 	void slot_newMessage(const QString &text, const QString &id);
+	void slot_contactListContextMenu(const QPoint &pos);
 private:
 	Ui::MainWindow *ui;
 	Searcher* m_pSearcher;
@@ -36,6 +38,7 @@ private:
 	TabWidget* m_pLocalChat;
 	QMenu* m_pTrayMenu;
 	QSystemTrayIcon* m_pTrayIcon;
+	ContactEditor* m_pContactEditor;
 
 	// QWidget interface
 protected:

@@ -6,6 +6,7 @@
 namespace app {
 	Config conf;
 	QList< UserData > lanUsersData;
+	QList< UserData > conctacts;
 
 	void loadSettings()
 	{
@@ -15,33 +16,28 @@ namespace app {
 		app::conf.username = settings.value( "MAIN/username", app::conf.username ).toString();
 		app::conf.port = settings.value( "MAIN/port", app::conf.port ).toUInt();
 
-//		settings.beginGroup("SYNC_SAVE_DIRS");
-//		app::conf.sync.saveDirs.clear();
-//		for(auto elem:settings.childKeys()) app::conf.sync.saveDirs.push_back( settings.value(elem).toString() );
-//		settings.endGroup();
+		settings.beginGroup("CONTACTS");
+		app::conctacts.clear();
+		for(auto elem:settings.childKeys()){
+			auto tmp = settings.value(elem).toString().split(";");
+			if( tmp.size() < 4 ) continue;
 
-//		settings.beginGroup("BOOKMARKS");
-//		app::conf.bookmarks.clear();
-//		for(auto elem:settings.childKeys()){
-//			auto tmp = settings.value(elem).toString().split("	");
-//			if( tmp.size() < 4 ) continue;
-
-//			Bookmark bm;
-//			bm.name = tmp[0];
-//			bm.type = tmp[1];
-//			bm.path = tmp[2];
-//			bm.mount = ( tmp[3].toUInt() == 1 )?true:false;
-//			if( tmp.size() >= 5 ) bm.mountDir = tmp[4];
-//			if( tmp.size() >= 6 ) bm.mountOnStart = ( tmp[5].toUInt() == 1 )?true:false;
-//			if( !bm.name.isEmpty() and !bm.type.isEmpty() and !bm.path.isEmpty() ) app::conf.bookmarks.push_back( bm );
-//		}
-//		settings.endGroup();
+			UserData user;
+			user.id = tmp[0];
+			user.username = tmp[1];
+			user.addr = QHostAddress( tmp[2] );
+			user.port = tmp[3].toUInt();
+			app::conctacts.push_back( user );
+		}
+		settings.endGroup();
 
 		if( settings.allKeys().size() == 0 ) app::saveSettings();
 	}
 
 	void saveSettings()
 	{
+		uint16_t i = 0;
+
 		QSettings settings("MySoft","LanCommunicator");
 		settings.clear();
 
@@ -55,19 +51,12 @@ namespace app {
 //			i++;
 //		}
 
-//		i = 0;
-//		for(auto elem:app::conf.bookmarks){
-//			QString mount = ( elem.mount )?"1":"0";
-//			QString mountOnStart = ( elem.mountOnStart )?"1":"0";
-//			QString str;
-//			if( !elem.mountDir.isEmpty() and elem.mount ){
-//				str = elem.name + "	" + elem.type + "	" + elem.path + "	" + mount + "	" + elem.mountDir + "	" + mountOnStart;
-//			}else{
-//				str = elem.name + "	" + elem.type + "	" + elem.path + "	" + mount ;
-//			}
-//			settings.setValue("BOOKMARKS/" + QString::number(i),str);
-//			i++;
-//		}
+		i = 0;
+		for( auto elem:app::conctacts ){
+			auto str = QString( "%1;%2;%3;%4" ).arg( elem.id ).arg( elem.username ).arg( elem.addr.toString() ).arg( elem.port );
+			settings.setValue("CONTACTS/" + QString::number(i),str);
+			i++;
+		}
 	}
 
 	bool parsArgs(int argc, char *argv[])

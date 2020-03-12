@@ -31,6 +31,7 @@ struct UserData{
 namespace app {
 	extern Config conf;
 	extern QList< UserData > lanUsersData;
+	extern QList< UserData > conctacts;
 
 	void loadSettings();
 	void saveSettings();
