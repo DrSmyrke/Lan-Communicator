@@ -100,8 +100,8 @@ void Searcher::foundID(const QString &id, const QHostAddress &addr, const uint16
 	}
 	if( !find ){
 		UserData data;
-		data.addr = addr;
-		data.port = port;
+		data.addr.setHost( addr.toString() );
+		data.addr.setPort( port );
 		data.id = id;
 		data.username = username;
 		data.timestamp = app::getUnixTime();
@@ -134,7 +134,7 @@ void Searcher::parsCommunicationPkt(const myproto::Pkt &pkt, const QHostAddress 
 	if( pkt.head.type == myproto::PktType::hello ){
 		auto id = myproto::findData( pkt, myproto::DataType::id );
 		auto username = myproto::findData( pkt, myproto::DataType::login );
-		if( id.size() == 32 ){
+		if( id.size() == app::conf.id.size() ){
 			foundID( id, ha, port, username );
 		}
 		return;
@@ -143,7 +143,7 @@ void Searcher::parsCommunicationPkt(const myproto::Pkt &pkt, const QHostAddress 
 		auto message = myproto::findData( pkt, myproto::DataType::text );
 		QString id;
 		for( auto elem:app::lanUsersData ){
-			if( elem.addr == ha && elem.port == port ){
+			if( elem.addr.host() == ha.toString() && elem.addr.port() == port ){
 				id = elem.id;
 				break;
 			}

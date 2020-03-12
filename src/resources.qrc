@@ -4,5 +4,6 @@
         <file>images/PC.png</file>
         <file>index.ico</file>
         <file>images/user.png</file>
+        <file>images/user_offline.png</file>
     </qresource>
 </RCC>

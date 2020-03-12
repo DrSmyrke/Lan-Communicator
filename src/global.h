@@ -2,8 +2,8 @@
 #define GLOBAL_H
 
 #include <QDir>
-#include <QHostAddress>
 #include <QString>
+#include <QUrl>
 #include <vector>
 
 struct Config{
@@ -21,11 +21,11 @@ struct Config{
 	uint16_t broadCastPort				= 37373;
 };
 struct UserData{
-	QHostAddress addr;
-	uint16_t port;
+	QUrl addr;
 	QString id;
 	QString username;
 	uint timestamp;
+	bool online							= false;
 };
 
 namespace app {

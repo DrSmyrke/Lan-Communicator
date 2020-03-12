@@ -2,6 +2,7 @@
 #include "myfunctions.h"
 #include <QSettings>
 #include <QDateTime>
+#include <QLocale>
 
 namespace app {
 	Config conf;
@@ -20,13 +21,12 @@ namespace app {
 		app::conctacts.clear();
 		for(auto elem:settings.childKeys()){
 			auto tmp = settings.value(elem).toString().split(";");
-			if( tmp.size() < 4 ) continue;
+			if( tmp.size() < 3 ) continue;
 
 			UserData user;
 			user.id = tmp[0];
 			user.username = tmp[1];
-			user.addr = QHostAddress( tmp[2] );
-			user.port = tmp[3].toUInt();
+			user.addr = QUrl( tmp[2] );
 			app::conctacts.push_back( user );
 		}
 		settings.endGroup();
@@ -53,7 +53,7 @@ namespace app {
 
 		i = 0;
 		for( auto elem:app::conctacts ){
-			auto str = QString( "%1;%2;%3;%4" ).arg( elem.id ).arg( elem.username ).arg( elem.addr.toString() ).arg( elem.port );
+			auto str = QString( "%1;%2;%3" ).arg( elem.id ).arg( elem.username ).arg( elem.addr.toString() );
 			settings.setValue("CONTACTS/" + QString::number(i),str);
 			i++;
 		}

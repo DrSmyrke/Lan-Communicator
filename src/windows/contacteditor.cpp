@@ -11,16 +11,7 @@ ContactEditor::ContactEditor(QWidget *parent) :
 		UserData user;
 		user.id = ui->idBox->text();
 		user.username = ui->userNameBox->text();
-		auto addr = ui->addrBox->text();
-		auto tmp = addr.split( ":" );
-		if( tmp.size() == 2 ){
-			user.addr = QHostAddress( tmp[0] );
-			user.port = tmp[1].toUInt();
-		}
-		if( tmp.size() == 1 ){
-			user.addr = QHostAddress( tmp[0] );
-			user.port = app::conf.port;
-		}
+		user.addr = QUrl( ui->addrBox->text() );
 
 		app::conctacts.push_back( user );
 
@@ -31,24 +22,14 @@ ContactEditor::ContactEditor(QWidget *parent) :
 		UserData user;
 		user.id = ui->idBox->text();
 		user.username = ui->userNameBox->text();
-		auto addr = ui->addrBox->text();
-		auto tmp = addr.split( ":" );
-		if( tmp.size() == 2 ){
-			user.addr = QHostAddress( tmp[0] );
-			user.port = tmp[1].toUInt();
-		}
-		if( tmp.size() == 1 ){
-			user.addr = QHostAddress( tmp[0] );
-			user.port = app::conf.port;
-		}
+		user.addr = QUrl( ui->addrBox->text() );
 
 		QMutableListIterator< UserData > i( app::conctacts );
 		while (i.hasNext()) {
 			auto elem = i.next();
-			if( elem.id == user.id ){
+			if( elem.id == m_prewId && elem.username == m_prewUserName && elem.addr.toString() == m_prewAddr ){
 				elem.username = user.username;
 				elem.addr = user.addr;
-				elem.port = user.port;
 				i.setValue( elem );
 				break;
 			}
@@ -78,11 +59,15 @@ void ContactEditor::newContact()
 	}
 }
 
-void ContactEditor::editContact(const QString &id, const QString &userName, const QString &addr, const QString &port)
+void ContactEditor::editContact(const QString &id, const QString &userName, const QString &addr)
 {
 	ui->idBox->setText( id );
-	ui->addrBox->setText( QString( "%1:%2" ).arg( addr ).arg( port ) );
+	ui->addrBox->setText( addr );
 	ui->userNameBox->setText( userName );
+
+	m_prewId = id;
+	m_prewUserName = userName;
+	m_prewAddr = addr;
 
 	ui->addB->hide();
 	ui->saveB->show();

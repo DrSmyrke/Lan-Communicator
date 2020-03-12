@@ -91,9 +91,13 @@ void MainWindow::slot_updateList()
 		uint r = currentUnixTime - elem.timestamp;
 		auto tooltip = QString( "last update %1 sec ago" ).arg( r );
 		item->setText( 0, username );
-		item->setIcon( 0, QIcon( "://images/user.png" ) );
+		if( elem.online ){
+			item->setIcon( 0, QIcon( "://images/user.png" ) );
+		}else{
+			item->setIcon( 0, QIcon( "://images/user_offline.png" ) );
+		}
 		item->setToolTip( 0, tooltip );
-		item->setData( 0, Qt::UserRole, QString( "C:%1:%2:%3:%4" ).arg( elem.id ).arg( elem.username ).arg( elem.addr.toString() ).arg( elem.port ) );
+		item->setData( 0, Qt::UserRole, QString( "C:%1:%2:%3" ).arg( elem.id ).arg( elem.username ).arg( elem.addr.toString() ) );
 		m_pContacts->addChild( item );
 	}
 }
@@ -147,14 +151,13 @@ void MainWindow::slot_contactListContextMenu(const QPoint &pos)
 	if( ui->contsctsListWidget->currentItem()->data( 0, Qt::UserRole ).isValid() ){
 		auto str = ui->contsctsListWidget->currentItem()->data( 0, Qt::UserRole ).toString();
 		auto tmp = str.split( ":" );
-		if( tmp.size() == 5 && tmp[0] == "C" ){
+		if( tmp.size() == 4 && tmp[0] == "C" ){
 			auto id = tmp[1];
 			auto userName = tmp[2];
 			auto addr = tmp[3];
-			auto port = tmp[4];
 			menu->addSeparator();
-			menu->addAction( tr("Edit contact"), this, [this, id, userName, addr, port](){
-				m_pContactEditor->editContact( id, userName, addr, port );
+			menu->addAction( tr("Edit contact"), this, [this, id, userName, addr](){
+				m_pContactEditor->editContact( id, userName, addr );
 			} );
 		}
 	}
