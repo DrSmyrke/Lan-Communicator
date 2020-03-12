@@ -22,13 +22,20 @@ void Searcher::search()
 	myproto::Pkt pkt;
 	pkt.head.channel = myproto::Channel::comunication;
 	pkt.head.type = myproto::PktType::hello;
-	pkt.head.pktCounter = ++m_pktCounter;
 	myproto::addData( pkt.rawData, myproto::DataType::id, app::conf.id.toUtf8() );
 	myproto::addData( pkt.rawData, myproto::DataType::login, app::conf.username.toUtf8() );
-	auto ba = myproto::buidPkt( pkt );
-	m_pSocket->writeDatagram( ba, QHostAddress::Broadcast, m_pSocket->localPort() );
+	sendData( pkt );
 
 	updateList();
+}
+
+void Searcher::slot_sendMess(const QString &text)
+{
+	myproto::Pkt pkt;
+	pkt.head.channel = myproto::Channel::comunication;
+	pkt.head.type = myproto::PktType::data;
+	myproto::addData( pkt.rawData, myproto::DataType::text, text.toUtf8() );
+	sendData( pkt );
 }
 
 void Searcher::slot_readyRead()
@@ -68,10 +75,11 @@ void Searcher::slot_readyRead()
 
 			myproto::parsData( pkt );
 
-			auto id = myproto::findData( pkt, myproto::DataType::id );
-			auto username = myproto::findData( pkt, myproto::DataType::login );
-			if( id.size() == 32 ){
-				foundID( id, ha, port, username );
+			switch ( pkt.head.channel ) {
+				case myproto::Channel::comunication:
+					parsCommunicationPkt( pkt, ha, port );
+				break;
+				default: break;
 			}
 		}
 	}
@@ -80,7 +88,9 @@ void Searcher::slot_readyRead()
 void Searcher::foundID(const QString &id, const QHostAddress &addr, const uint16_t port, const QString &username)
 {
 	bool find = false;
-	for( auto &elem:m_data ){
+	QMutableListIterator< UserData > i( app::lanUsersData );
+	while (i.hasNext()) {
+		auto elem = i.next();
 		if( elem.id == id ){
 			elem.timestamp = app::getUnixTime();
 			find = true;
@@ -88,13 +98,13 @@ void Searcher::foundID(const QString &id, const QHostAddress &addr, const uint16
 		}
 	}
 	if( !find ){
-		Searcher::Data data;
+		UserData data;
 		data.addr = addr;
 		data.port = port;
 		data.id = id;
 		data.username = username;
 		data.timestamp = app::getUnixTime();
-		m_data.push_back( data );
+		app::lanUsersData.push_back( data );
 		emit signal_updateList();
 	}
 }
@@ -104,7 +114,7 @@ void Searcher::updateList()
 	uint currentTimestamp = app::getUnixTime();
 	bool removeF = false;
 
-	QMutableListIterator< Data > i(m_data);
+	QMutableListIterator< UserData > i( app::lanUsersData );
 	while (i.hasNext()) {
 		auto elem = i.next();
 		uint r = currentTimestamp - elem.timestamp;
@@ -116,4 +126,37 @@ void Searcher::updateList()
 	if( removeF ){
 		emit signal_updateList();
 	}
+}
+
+void Searcher::parsCommunicationPkt(const myproto::Pkt &pkt, const QHostAddress &ha, const uint16_t port)
+{
+	if( pkt.head.type == myproto::PktType::hello ){
+		auto id = myproto::findData( pkt, myproto::DataType::id );
+		auto username = myproto::findData( pkt, myproto::DataType::login );
+		if( id.size() == 32 ){
+			foundID( id, ha, port, username );
+		}
+		return;
+	}
+	if( pkt.head.type == myproto::PktType::data ){
+		auto message = myproto::findData( pkt, myproto::DataType::text );
+		QString id;
+		for( auto elem:app::lanUsersData ){
+			if( elem.addr == ha && elem.port == port ){
+				id = elem.id;
+				break;
+			}
+		}
+		if( !id.isEmpty() ){
+			emit signal_readMess( message, id );
+		}
+		return;
+	}
+}
+
+void Searcher::sendData(myproto::Pkt &pkt)
+{
+	pkt.head.pktCounter = ++m_pktCounter;
+	auto ba = myproto::buidPkt( pkt );
+	m_pSocket->writeDatagram( ba, QHostAddress::Broadcast, m_pSocket->localPort() );
 }

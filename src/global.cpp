@@ -5,6 +5,7 @@
 
 namespace app {
 	Config conf;
+	QList< UserData > lanUsersData;
 
 	void loadSettings()
 	{

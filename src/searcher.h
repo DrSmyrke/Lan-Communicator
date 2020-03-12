@@ -10,18 +10,13 @@ class Searcher : public QObject
 {
 	Q_OBJECT
 public:
-	struct Data{
-		QHostAddress addr;
-		uint16_t port;
-		QString id;
-		QString username;
-		uint timestamp;
-	};
 	explicit Searcher(QObject *parent = nullptr);
 	void search();
-	QList< Data > getData(){ return m_data; }
 signals:
 	void signal_updateList();
+	void signal_readMess(const QString &text, const QString &id);
+public slots:
+	void slot_sendMess(const QString &text);
 private slots:
 	void slot_readyRead();
 private:
@@ -29,10 +24,11 @@ private:
 	QList< QHostAddress > m_myIPs;
 	QByteArray m_rxBuff;
 	uint16_t m_pktCounter;
-	QList< Data > m_data;
 
 	void foundID(const QString &id, const QHostAddress &addr, const uint16_t port, const QString &username);
 	void updateList();
+	void parsCommunicationPkt(const myproto::Pkt &pkt, const QHostAddress &ha, const uint16_t port);
+	void sendData(myproto::Pkt &pkt);
 };
 
 #endif // SEARCHER_H

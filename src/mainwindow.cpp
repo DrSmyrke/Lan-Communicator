@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	connect( m_pTimer, &QTimer::timeout, this, &MainWindow::slot_timerUpdate );
 	connect( m_pSearcher, &Searcher::signal_updateList, this, &MainWindow::slot_searcherUpdateList );
+	connect( m_pLocalChat, &TabWidget::signal_sendMess, m_pSearcher, &Searcher::slot_sendMess );
+	connect( m_pSearcher, &Searcher::signal_readMess, m_pLocalChat, &TabWidget::slot_readMess );
 
 	setWindowTitle( "Lan Communicator v" + app::conf.version );
 	setWindowIcon( QIcon( "://index.ico" ) );
@@ -50,7 +52,9 @@ void MainWindow::slot_searcherUpdateList()
 		m_pLocalContacts->removeChild( m_pLocalContacts->child( i ) );
 	}
 
-	for( auto elem:m_pSearcher->getData() ){
+	QMutableListIterator< UserData > i( app::lanUsersData );
+	while (i.hasNext()) {
+		auto elem = i.next();
 		QTreeWidgetItem* item = new QTreeWidgetItem();
 		auto help = ( elem.username.isEmpty() ) ? elem.id : elem.username;
 		auto text = QString( "%1:%2\n%3" ).arg( elem.addr.toString() ).arg( elem.port ).arg( help );
