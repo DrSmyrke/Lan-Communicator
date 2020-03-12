@@ -24,15 +24,16 @@ int main(int argc, char *argv[])
 	app::loadSettings();
 	if( !app::parsArgs(argc, argv) ) return 0;
 
-	if( app::conf.id.isEmpty() ){
+	if( app::conf.id.isEmpty() || app::conf.username.isEmpty() ){
 		UserNameWindow* unwin = new UserNameWindow();
 		if( unwin->exec() == QDialog::Accepted ){
 			app::generateID( unwin->getUsername() );
+			app::conf.username = unwin->getUsername();
 		}
 		unwin->deleteLater();
 	}
 
-	if( app::conf.id.isEmpty() ){
+	if( app::conf.id.isEmpty() || app::conf.username.isEmpty() ){
 		return 0;
 	}
 

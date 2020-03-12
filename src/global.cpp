@@ -11,6 +11,7 @@ namespace app {
 		QSettings settings("MySoft","LanCommunicator");
 
 		app::conf.id = settings.value( "MAIN/id", app::conf.id ).toString();
+		app::conf.username = settings.value( "MAIN/username", app::conf.username ).toString();
 		app::conf.port = settings.value( "MAIN/port", app::conf.port ).toUInt();
 
 //		settings.beginGroup("SYNC_SAVE_DIRS");
@@ -45,6 +46,7 @@ namespace app {
 
 		settings.setValue( "MAIN/id", app::conf.id );
 		settings.setValue( "MAIN/port", app::conf.port );
+		settings.setValue( "MAIN/username", app::conf.username );
 
 //		i = 0;
 //		for(auto elem:app::conf.sync.saveDirs){
@@ -121,6 +123,11 @@ namespace app {
 		ba.append( dt.toString("yyyy.MM.dd [hh:mm:ss:zzz] ") );
 
 		app::conf.id = mf::md5( ba );
+	}
+
+	uint getUnixTime()
+	{
+		return QDateTime::currentDateTimeUtc().toTime_t();
 	}
 
 }

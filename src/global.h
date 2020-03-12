@@ -15,7 +15,9 @@ struct Config{
 #endif
 	QString version;
 	QString id;
+	QString username;
 	uint16_t port						= 7373;
+	uint16_t broadCastPort				= 37373;
 };
 
 namespace app {
@@ -27,6 +29,7 @@ namespace app {
 	void setLog(const uint8_t logLevel, const QString &mess);
 
 	void generateID(const QString &login);
+	uint getUnixTime();
 }
 
 #endif // GLOBAL_H

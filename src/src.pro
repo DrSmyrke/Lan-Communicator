@@ -41,7 +41,8 @@ SOURCES += \
     global.cpp \
     myfunctions.cpp \
     windows/username.cpp \
-    myproto.cpp
+    myproto.cpp \
+    widgets/tabwidget.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -50,10 +51,12 @@ HEADERS += \
     version.h \
     myfunctions.h \
     windows/username.h \
-    myproto.h
+    myproto.h \
+    widgets/tabwidget.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    widgets/tabwidget.ui
 
 TRANSLATIONS = lang/ru_RU.ts
 
@@ -65,3 +68,6 @@ DISTFILES += \
     gitversion.pri \
     index.rc \
     myLibs.pri
+
+RESOURCES += \
+    resources.qrc
