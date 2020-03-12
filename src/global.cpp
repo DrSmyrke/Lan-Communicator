@@ -111,8 +111,10 @@ namespace app {
 		ba.append( login );
 		ba.append( ">:LanCommutator>:" );
 		ba.append( dt.toString("yyyy.MM.dd [hh:mm:ss:zzz] ") );
+		ba.append( ">:LanCommutator>:" );
+		ba.append( QLocale::system().name() );
 
-		app::conf.id = mf::md5( ba );
+		app::conf.id = mf::sha1( ba );
 	}
 
 	uint getUnixTime()
