@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>images/lan.png</file>
         <file>images/PC.png</file>
+        <file>index.ico</file>
     </qresource>
 </RCC>

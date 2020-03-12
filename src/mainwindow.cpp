@@ -12,11 +12,15 @@ MainWindow::MainWindow(QWidget *parent) :
 	m_pLocalContacts = new QTreeWidgetItem();
 	m_pContacts = new QTreeWidgetItem();
 	m_pLocalChat = new TabWidget( this );
+	m_pTrayMenu = new QMenu( this );
+	m_pTrayIcon = new QSystemTrayIcon( this );
 
 	connect( m_pTimer, &QTimer::timeout, this, &MainWindow::slot_timerUpdate );
 	connect( m_pSearcher, &Searcher::signal_updateList, this, &MainWindow::slot_searcherUpdateList );
 	connect( m_pLocalChat, &TabWidget::signal_sendMess, m_pSearcher, &Searcher::slot_sendMess );
 	connect( m_pSearcher, &Searcher::signal_readMess, m_pLocalChat, &TabWidget::slot_readMess );
+	connect( m_pTrayIcon, &QSystemTrayIcon::activated, this, &MainWindow::slot_trayIconActivated );
+	connect( m_pSearcher, &Searcher::signal_readMess, this, &MainWindow::slot_newMessage );
 
 	setWindowTitle( "Lan Communicator v" + app::conf.version );
 	setWindowIcon( QIcon( "://index.ico" ) );
@@ -31,6 +35,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->contsctsListWidget->addTopLevelItem( m_pLocalContacts );
 	ui->contsctsListWidget->addTopLevelItem( m_pContacts );
 	ui->tabWidget->addTab( m_pLocalChat, QIcon( "://images/lan.png" ), tr( "Local Newtwork" ) );
+	m_pTrayIcon->setIcon( QIcon( "://index.ico") );
+	m_pTrayIcon->setContextMenu( m_pTrayMenu );
+
+	m_pTrayMenu->addAction( tr("Exit"), this, &MainWindow::close );
 }
 
 MainWindow::~MainWindow()
@@ -75,4 +83,51 @@ void MainWindow::slot_searcherUpdateList()
 //	}
 
 	//ui->contsctsListWidget->addTopLevelItem(  );
+}
+
+void MainWindow::slot_trayIconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+	switch (reason) {
+		case QSystemTrayIcon::Trigger:
+		case QSystemTrayIcon::DoubleClick:
+			//iconComboBox->setCurrentIndex((iconComboBox->currentIndex() + 1) % iconComboBox->count());
+			if( this->isHidden() ){
+				this->show();
+				m_pTrayIcon->hide();
+			}
+		break;
+		case QSystemTrayIcon::MiddleClick:
+			//showMessage();
+		break;
+		default: break;
+	}
+}
+
+void MainWindow::slot_newMessage(const QString &text, const QString &id)
+{
+	if( !m_pTrayIcon->isVisible() ){
+		return;
+	}
+
+	QString username = id;
+	for( auto elem:app::lanUsersData ){
+		if( elem.id == id ){
+			username = elem.username;
+			break;
+		}
+	}
+
+	auto title = QString( "Lan Network message" );
+	auto message = QString( "[%1]\n>: %2" ).arg( username ).arg( text );
+
+	m_pTrayIcon->showMessage( title, message, QSystemTrayIcon::Information, 10000 );
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+	if( !m_pTrayIcon->isVisible() ){
+		this->hide();
+		m_pTrayIcon->show();
+		event->ignore();
+	}
 }
