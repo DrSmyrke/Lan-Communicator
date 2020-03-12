@@ -2,5 +2,8 @@ src/src.pro.user
 build/
 build-*
 bin/
-src/myproto.cpp
-src/myproto.h
+myproto.cpp
+myproto.h
+myfunctions.h
+myfunctions.cpp
+*.autosave
