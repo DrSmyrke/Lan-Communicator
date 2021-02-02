@@ -1,18 +1,15 @@
-# Need to discard STDERR so get path to NULL device
-win32 {
-    NULL_DEVICE = NUL # Windows doesn't have /dev/null but has NUL
-} else {
-    NULL_DEVICE = /dev/null
-}
+FILE = myfunctions.cpp
+!exists($$FILE):system(wget https://raw.githubusercontent.com/DrSmyrke/QT-Libs/master/$$FILE -O $$FILE)
+SOURCES += $$FILE
 
-    ERASE_COMMAND = rm {myfunctions.cpp, myfunctions.h, wget.cpp, wget.h}
-win32|win64{
-    ERASE_COMMAND = del myfunctions.cpp, myfunctions.h, wget.cpp, wget.h
-}
+FILE = myfunctions.h
+!exists($$FILE):system(wget https://raw.githubusercontent.com/DrSmyrke/QT-Libs/master/$$FILE -O $$FILE)
+HEADERS += $$FILE
 
-system($$ERASE_COMMAND 2> $$NULL_DEVICE)
+FILE = myproto.cpp
+!exists($$FILE):system(wget https://raw.githubusercontent.com/DrSmyrke/QT-Libs/master/$$FILE -O $$FILE)
+SOURCES += $$FILE
 
-system(curl --proxy-negotiate -u: https://raw.githubusercontent.com/DrSmyrke/QT-Libs/master/myfunctions.cpp > myfunctions.cpp)
-system(curl --proxy-negotiate -u: https://raw.githubusercontent.com/DrSmyrke/QT-Libs/master/myfunctions.h > myfunctions.h)
-system(curl --proxy-negotiate -u: https://raw.githubusercontent.com/DrSmyrke/QT-Libs/master/myproto.cpp > myproto.cpp)
-system(curl --proxy-negotiate -u: https://raw.githubusercontent.com/DrSmyrke/QT-Libs/master/myproto.h > myproto.h)
+FILE = myproto.h
+!exists($$FILE):system(wget https://raw.githubusercontent.com/DrSmyrke/QT-Libs/master/$$FILE -O $$FILE)
+HEADERS += $$FILE

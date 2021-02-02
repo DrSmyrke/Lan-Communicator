@@ -12,6 +12,9 @@ TARGET = lanCommunicator
 TEMPLATE = app
 CONFIG += c++11
 
+#uncomment from static build
+#QMAKE_LFLAGS_RELEASE += -static -static-libgcc
+
 DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG(debug, debug|release) {
@@ -39,9 +42,7 @@ SOURCES += \
         mainwindow.cpp \
     searcher.cpp \
     global.cpp \
-    myfunctions.cpp \
     windows/username.cpp \
-    myproto.cpp \
     widgets/tabwidget.cpp \
     windows/contacteditor.cpp
 
@@ -50,9 +51,7 @@ HEADERS += \
     searcher.h \
     global.h \
     version.h \
-    myfunctions.h \
     windows/username.h \
-    myproto.h \
     widgets/tabwidget.h \
     windows/contacteditor.h
 
